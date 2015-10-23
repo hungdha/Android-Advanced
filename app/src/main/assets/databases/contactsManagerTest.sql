@@ -1,0 +1,5 @@
+DROP TABLE IF EXISTS "contacts";
+CREATE TABLE "contacts" ("id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL , "name" TEXT, "phone_number" TEXT);
+INSERT INTO "contacts" VALUES(1,'Le Hung','01689283432');
+INSERT INTO "contacts" VALUES(2,'Le Hai','016892834312');
+INSERT INTO "contacts" VALUES(3,'Le Huong','0987654321');
