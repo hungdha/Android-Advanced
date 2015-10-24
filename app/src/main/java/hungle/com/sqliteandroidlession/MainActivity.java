@@ -75,7 +75,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        Log.d("__ID_CONTACT" , R.id.btn_del_contact + "" );
+        if (id ==  R.id.btn_del_contact ) {
+            //return true;
+            Toast.makeText(this, "Button delete invoked", Toast.LENGTH_SHORT).show();
             return true;
         }
 

@@ -6,28 +6,28 @@
         jumboMode="false"
         revision="23.0.0"
         sha1="990e7f98a7bad86a40b1f0bcfeb039023afd0839">
-        <dex dex="C:\Users\nam\AndroidStudioProjects\SQLiteAndroidLession\app\build\intermediates\pre-dexed\debug\support-annotations-23.0.0-36ba6136c600c900aa794d31302222a3569c7d2c.jar" />
+        <dex dex="C:\Users\nam\AndroidStudioProjects\android_advantage\app\build\intermediates\pre-dexed\debug\support-annotations-23.0.0-36ba6136c600c900aa794d31302222a3569c7d2c.jar" />
     </item>
     <item
-        jar="C:\Users\nam\AndroidStudioProjects\SQLiteAndroidLession\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.0.0\jars\classes.jar"
+        jar="C:\Users\nam\AndroidStudioProjects\android_advantage\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.0.0\jars\classes.jar"
         jumboMode="false"
         revision="23.0.0"
         sha1="4fcf0b1879f8caf497c073e1432d398e9e2988c1">
-        <dex dex="C:\Users\nam\AndroidStudioProjects\SQLiteAndroidLession\app\build\intermediates\pre-dexed\debug\classes-d44f8260742024f6da11d1ebe7c6cf0ebe17e501.jar" />
+        <dex dex="C:\Users\nam\AndroidStudioProjects\android_advantage\app\build\intermediates\pre-dexed\debug\classes-9516738f1f097f4203ffebecd65cf25da5bc2717.jar" />
     </item>
     <item
-        jar="C:\Users\nam\AndroidStudioProjects\SQLiteAndroidLession\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.0\jars\classes.jar"
-        jumboMode="false"
-        revision="23.0.0"
-        sha1="8413c27b45b7fe61dca4a98159f65e2cee215f5a">
-        <dex dex="C:\Users\nam\AndroidStudioProjects\SQLiteAndroidLession\app\build\intermediates\pre-dexed\debug\classes-226e124e508e769ae767d2d735a03d31591b965b.jar" />
-    </item>
-    <item
-        jar="C:\Users\nam\AndroidStudioProjects\SQLiteAndroidLession\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.0\jars\libs\internal_impl-23.0.0.jar"
+        jar="C:\Users\nam\AndroidStudioProjects\android_advantage\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.0\jars\libs\internal_impl-23.0.0.jar"
         jumboMode="false"
         revision="23.0.0"
         sha1="8bd336eeae661e8311330284897ee07f8ebaa297">
-        <dex dex="C:\Users\nam\AndroidStudioProjects\SQLiteAndroidLession\app\build\intermediates\pre-dexed\debug\internal_impl-23.0.0-d38d4ffb219f90d094318a48d8c532d305d94eb0.jar" />
+        <dex dex="C:\Users\nam\AndroidStudioProjects\android_advantage\app\build\intermediates\pre-dexed\debug\internal_impl-23.0.0-fb8767cf54bc5001f2b11c75a8b02a0d9fd76c89.jar" />
+    </item>
+    <item
+        jar="C:\Users\nam\AndroidStudioProjects\android_advantage\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.0"
+        sha1="8413c27b45b7fe61dca4a98159f65e2cee215f5a">
+        <dex dex="C:\Users\nam\AndroidStudioProjects\android_advantage\app\build\intermediates\pre-dexed\debug\classes-b1c2c449559aeb21237d7a4542e5e2c5c1967f6b.jar" />
     </item>
 
 </items>
