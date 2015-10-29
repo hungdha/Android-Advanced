@@ -1,7 +1,11 @@
 package hungle.com.sqliteandroidlession;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -27,6 +31,7 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
         TextView tvPhone;
         Button btnDel;
     }
+    private int mSelectedItem;
     private Context context;
     private ArrayList<Contact> data = null;
     public ContactAdapter(Context _context, ArrayList<Contact> _contacts) {
@@ -41,6 +46,11 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
         // Check if an existing view is being reused, otherwise inflate the view
         if( convertView == null){
             convertView  = LayoutInflater.from(getContext()).inflate(R.layout.contact_item, parent, false);
+        }
+        if (position % 2 == 0) {
+            convertView.setBackgroundColor(Color.parseColor("#ffffff"));
+        } else {
+            convertView.setBackgroundColor(Color.parseColor("#BCF7F0"));
         }
         final ContactViewHolder holder = new ContactViewHolder();
         holder.tvName = (TextView) convertView.findViewById(R.id.tvName);
@@ -67,36 +77,47 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
             @Override
             public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
                 menu.setHeaderTitle(holder.tvName.getText().toString());
-                Log.d("___MY_ID", v.getId() + "" );
-                menu.add(0,v.getId(),0,"Delete" );
+                Log.d("___MY_ID", v.getId() + "");
+                menu.add(0, v.getId(), 0, "Delete");
 
             }
         });
         //Register view event click listener
-        /*
-        convertView.setOnClickListener(new View.OnClickListener() {
-            private int pos = position;
 
+        convertView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                int contactID = Integer.parseInt(holder.tvID.getText().toString());
-                Log.v("CONVER_VIEW_", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaa" + contactID);
+                // v.setSelected(true);
+                //v.setBackgroundColor(Color.parseColor("#222222"));
+
             }
         });
-        */
+
         //Đăng ký lắng nghe khi click vào icon của view này
         holder.btnDel.setOnClickListener(new View.OnClickListener() {
             private int pos = position;
             public void onClick(View v) {
-                int contactID = Integer.parseInt(holder.tvID.getText().toString());
-                DatabaseHelper db = new DatabaseHelper(context);
-                if(db.delContact(contactID)){
-                    data.remove(pos);
-                    notifyDataSetChanged(); //  remove item list
-                    Toast.makeText(context, "Contact deleted. #" + holder.tvID.getText().toString(), Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    Toast.makeText(context, "Contact failed. #" + holder.tvID.getText().toString(), Toast.LENGTH_SHORT).show();
-                }
+                final int contactID = Integer.parseInt(holder.tvID.getText().toString());
+                final DatabaseHelper db = new DatabaseHelper(context);
+
+                MessageUtilities.confirm(context, "Delete Item", "Do you want to delete this item ?", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (db.delContact(contactID)) {
+                            data.remove(pos);
+                            notifyDataSetChanged(); //  remove item list
+                            MessageUtilities.alert(context, "Contact deleted. #" + holder.tvID.getText().toString());
+                            //Toast.makeText(context, "Contact deleted. #" + holder.tvID.getText().toString(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            MessageUtilities.alert(context,"Contact deleted. #" + holder.tvID.getText().toString() );
+                            // Toast.makeText(context, "Contact failed. #" + holder.tvID.getText().toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
 
             }
         });

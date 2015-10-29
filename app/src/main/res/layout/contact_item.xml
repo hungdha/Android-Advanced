@@ -9,7 +9,9 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:weightSum="10">
+            android:weightSum="10"
+            android:background="@drawable/bg_listview_selector"
+            >
             <TextView
                 android:id="@+id/tvContactID"
                 android:layout_width="wrap_content"
@@ -40,7 +42,8 @@
                     android:layout_height="wrap_content"
                     android:text="Contact Name"
                     android:textSize="15dp"
-                    android:paddingBottom="10dp" />
+                    android:paddingBottom="10dp"
+                     />
 
                 <TextView
                     android:id="@+id/tvPhone"
