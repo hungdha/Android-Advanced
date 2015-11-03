@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -29,7 +30,8 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
         TextView tvID;
         ImageView ivPhoto;
         TextView tvPhone;
-        Button btnDel;
+        ImageButton btnDel;
+        int ID;
     }
     private int mSelectedItem;
     private Context context;
@@ -47,45 +49,53 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
         if( convertView == null){
             convertView  = LayoutInflater.from(getContext()).inflate(R.layout.contact_item, parent, false);
         }
-        if (position % 2 == 0) {
+
+        /*if (position % 2 == 0) {
             convertView.setBackgroundColor(Color.parseColor("#ffffff"));
         } else {
             convertView.setBackgroundColor(Color.parseColor("#BCF7F0"));
-        }
+        }*/
         final ContactViewHolder holder = new ContactViewHolder();
         holder.tvName = (TextView) convertView.findViewById(R.id.tvName);
         holder.tvPhone = (TextView) convertView.findViewById(R.id.tvPhone);
         holder.tvID = (TextView) convertView.findViewById(R.id.tvContactID);
-        holder.btnDel = (Button)convertView.findViewById(R.id.btn_del_contact);
+        holder.btnDel = (ImageButton)convertView.findViewById(R.id.btn_del_contact);
 
         holder.tvName.setText(contact.getName());
         holder.tvPhone.setText(contact.getPhoneNumber());
         holder.tvID.setText(contact.getID() + "");
+        holder.ID = contact.getID();
         /*
         convertView.setOnLongClickListener(new View.OnLongClickListener() {
-
             private int pos = position;
-
             public boolean onLongClick(View v) {
                 int contactID = Integer.parseInt(holder.tvID.getText().toString());
                 Log.v("TAG_HUNG_LE", "Long Click" + contactID);
                 return true;
             }
         });
+
         */
         convertView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
             @Override
             public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
                 menu.setHeaderTitle(holder.tvName.getText().toString());
-                Log.d("___MY_ID", v.getId() + "");
-                menu.add(0, v.getId(), 0, "Delete");
-
+                int contactID = holder.ID;
+                Log.d("ViewID", contactID + "");
+                menu.add(0, contactID, 1, "Delete");
+                menu.add(0,contactID, 2 , "Edit");
+                menu.add(0,contactID, 3 , "Details");
             }
         });
+
+
+
+
         //Register view event click listener
 
         convertView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                //Log.e("CLICK_CONVERT_VIEW", v.toString());
                 // v.setSelected(true);
                 //v.setBackgroundColor(Color.parseColor("#222222"));
 
@@ -96,21 +106,18 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
         holder.btnDel.setOnClickListener(new View.OnClickListener() {
             private int pos = position;
             public void onClick(View v) {
-                final int contactID = Integer.parseInt(holder.tvID.getText().toString());
-                final DatabaseHelper db = new DatabaseHelper(context);
-
-                MessageUtilities.confirm(context, "Delete Item", "Do you want to delete this item ?", new DialogInterface.OnClickListener() {
+                    final int contactID = Integer.parseInt(holder.tvID.getText().toString());
+                    final DatabaseHelper db = new DatabaseHelper(context);
+                    MessageUtilities.confirm(context, "Delete Item", "Do you want to delete this item ?", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (db.delContact(contactID)) {
-                            data.remove(pos);
-                            notifyDataSetChanged(); //  remove item list
-                            MessageUtilities.alert(context, "Contact deleted. #" + holder.tvID.getText().toString());
-                            //Toast.makeText(context, "Contact deleted. #" + holder.tvID.getText().toString(), Toast.LENGTH_SHORT).show();
-                        } else {
-                            MessageUtilities.alert(context,"Contact deleted. #" + holder.tvID.getText().toString() );
-                            // Toast.makeText(context, "Contact failed. #" + holder.tvID.getText().toString(), Toast.LENGTH_SHORT).show();
-                        }
+                    if (db.delContact(contactID)) {
+                        data.remove(pos);
+                        notifyDataSetChanged(); //  remove item list
+                        MessageUtilities.alert(context, "Contact deleted. #" + holder.tvID.getText().toString());
+                    } else {
+                        MessageUtilities.alert(context,"Contact deleted. #" + holder.tvID.getText().toString() );
+                    }
                     }
                 }, new DialogInterface.OnClickListener() {
                     @Override

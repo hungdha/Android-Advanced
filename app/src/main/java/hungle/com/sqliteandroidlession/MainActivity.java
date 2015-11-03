@@ -1,10 +1,13 @@
 package hungle.com.sqliteandroidlession;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -33,8 +36,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // findViewById(R.id.btn_del_contact).setOnClickListener(this);
 
         listViewContact = (ListView) findViewById(R.id.list_view_contact);
+        registerForContextMenu(listViewContact);
         popuplateContacts();
         registedClickCallBack();
+
 
 
     }
@@ -57,15 +62,61 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void popuplateContacts() {
         // fill data to listview control
         ContactAdapter contactAdapter = new ContactAdapter(this, db.getAllContacts2());
-        ListView listViewContact = (ListView) findViewById(R.id.list_view_contact);
+        // ListView listViewContact = (ListView) findViewById(R.id.list_view_contact);
         listViewContact.setAdapter(contactAdapter);
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        // getMenuInflater().inflate(R.menu.menu_listview, menu);
+        // Log.d("MY_MENU", "onCreateOptionsMenu()");
         return true;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        /*
+        if (v.getId() == R.id.list_view_contact) {
+            Log.d("MY_MENU", "onCreateContextMenu()");
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.menu_listview, menu);
+        }
+        */
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        Log.d("MY_MENU", "onContextItemSelected(item)");
+        String title = item.getTitle().toString();
+        boolean result = false;
+        switch (title){
+            case "Delete":{
+                int id = item.getItemId();
+                if (db.delContact(id)) {
+                    popuplateContacts();
+                    MessageUtilities.alert(this, "Delete contact successfully!");
+                } else {
+                    MessageUtilities.alert(this, "Delete failed");
+                }
+                result = true;
+                break;
+            }
+            case "Edit":{
+                result = true;
+                break;
+            }
+            case "Details":{
+                MessageUtilities.alert(this, "" );
+                break;
+            }
+            default:
+                result = super.onContextItemSelected(item);
+                break;
+        }
+        return result;
     }
 
     @Override
@@ -74,9 +125,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
+        Log.d("OPT_ITEM_SELECTED", "onOptionsItemSelected()");
         //noinspection SimplifiableIfStatement
-        Log.d("__ID_CONTACT" , R.id.btn_del_contact + "" );
+        Log.d("__ID_CONTACT", R.id.btn_del_contact + "");
         if (id ==  R.id.btn_del_contact ) {
             //return true;
             Toast.makeText(this, "Button delete invoked", Toast.LENGTH_SHORT).show();
