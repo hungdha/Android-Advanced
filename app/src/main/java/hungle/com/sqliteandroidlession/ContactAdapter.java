@@ -1,25 +1,28 @@
 package hungle.com.sqliteandroidlession;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+
+import hungle.com.sqliteandroidlession.classes.Contact;
+import hungle.com.sqliteandroidlession.classes.ContactDAO;
+import hungle.com.sqliteandroidlession.classes.ContactDaoImpl;
 
 /**
  * Created by Le Hung on 10/14/2015 9:10 PM.
@@ -49,12 +52,6 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
         if( convertView == null){
             convertView  = LayoutInflater.from(getContext()).inflate(R.layout.contact_item, parent, false);
         }
-
-        /*if (position % 2 == 0) {
-            convertView.setBackgroundColor(Color.parseColor("#ffffff"));
-        } else {
-            convertView.setBackgroundColor(Color.parseColor("#BCF7F0"));
-        }*/
         final ContactViewHolder holder = new ContactViewHolder();
         holder.tvName = (TextView) convertView.findViewById(R.id.tvName);
         holder.tvPhone = (TextView) convertView.findViewById(R.id.tvPhone);
@@ -64,18 +61,14 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
         holder.tvName.setText(contact.getName());
         holder.tvPhone.setText(contact.getPhoneNumber());
         holder.tvID.setText(contact.getID() + "");
-        holder.ID = contact.getID();
         /*
-        convertView.setOnLongClickListener(new View.OnLongClickListener() {
-            private int pos = position;
-            public boolean onLongClick(View v) {
-                int contactID = Integer.parseInt(holder.tvID.getText().toString());
-                Log.v("TAG_HUNG_LE", "Long Click" + contactID);
-                return true;
-            }
-        });
-
-        */
+        File imgFile = new File( Environment.getExternalStorageDirectory() + File.separator + "HungImages" +File.separator + contact.getImage() );
+        if(imgFile.exists()){
+            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            holder.ivPhoto.setImageBitmap(myBitmap);
+        }
+       */
+        holder.ID = contact.getID();
         convertView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
             @Override
             public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -88,30 +81,16 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
             }
         });
 
-
-
-
-        //Register view event click listener
-
-        convertView.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                //Log.e("CLICK_CONVERT_VIEW", v.toString());
-                // v.setSelected(true);
-                //v.setBackgroundColor(Color.parseColor("#222222"));
-
-            }
-        });
-
-        //Đăng ký lắng nghe khi click vào icon của view này
         holder.btnDel.setOnClickListener(new View.OnClickListener() {
             private int pos = position;
             public void onClick(View v) {
                     final int contactID = Integer.parseInt(holder.tvID.getText().toString());
-                    final DatabaseHelper db = new DatabaseHelper(context);
+                    //final DatabaseHelper db = new DatabaseHelper(context);
+                    final ContactDAO db = new ContactDaoImpl(context);
                     MessageUtilities.confirm(context, "Delete Item", "Do you want to delete this item ?", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                    if (db.delContact(contactID)) {
+                    if (db.delete(contactID)) {
                         data.remove(pos);
                         notifyDataSetChanged(); //  remove item list
                         MessageUtilities.alert(context, "Contact deleted. #" + holder.tvID.getText().toString());
@@ -125,11 +104,9 @@ public class ContactAdapter extends ArrayAdapter<Contact> {
 
                     }
                 });
-
             }
         });
         convertView.setTag(holder);
-        // Return the completed view to render on screen
-        return convertView;
+        return convertView; // Return the completed view to render on screen
     }
 }

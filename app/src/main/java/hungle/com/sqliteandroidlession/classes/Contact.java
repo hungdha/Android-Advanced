@@ -1,4 +1,6 @@
-package hungle.com.sqliteandroidlession;
+package hungle.com.sqliteandroidlession.classes;
+
+import android.graphics.Bitmap;
 
 /**
  * Created by nam on 10/13/2015.
@@ -6,19 +8,20 @@ package hungle.com.sqliteandroidlession;
 public class Contact {
 
     //private variables
-    int _id;
-    String _name;
-    String _phone_number;
-
+    private int _id;
+    private String _name;
+    private String _phone_number;
+    private String _image;
     // Empty constructor
     public Contact(){
 
     }
     // constructor
-    public Contact(int id, String name, String _phone_number){
+    public Contact(int id, String name, String _phone_number, String _image ){
         this._id = id;
         this._name = name;
         this._phone_number = _phone_number;
+        this._image = _image;
     }
 
     // constructor
@@ -56,6 +59,11 @@ public class Contact {
         this._phone_number = phone_number;
     }
 
-
+    public  void setImage( String image ){
+        this._image = image;
+    }
+    public String getImage(){
+        return this._image;
+    }
 
 }

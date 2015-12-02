@@ -35,7 +35,8 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/ed_phone_number"
-                    android:hint="Phone Number" />
+                    android:hint="Phone Number"
+                    android:inputType="phone" />
             </LinearLayout>
 
             <LinearLayout

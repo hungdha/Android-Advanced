@@ -1,13 +1,12 @@
 package hungle.com.sqliteandroidlession;
 
-import android.content.Context;
-import android.graphics.Color;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.os.Environment;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,32 +14,50 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    private DatabaseHelper db;
+import hungle.com.sqliteandroidlession.classes.Contact;
+import hungle.com.sqliteandroidlession.classes.ContactDAO;
+import hungle.com.sqliteandroidlession.classes.ContactDaoImpl;
+
+public class MainActivity extends Activity implements View.OnClickListener {
+    // private DatabaseHelper db;
+    private ContactDAO db;
     private ListView listViewContact;
     private Button btnAddContact;
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("MY_DEBUG", "onStop()" );
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        popuplateContacts();
+        Log.d("MY_DEBUG", "onStart()");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        db = new DatabaseHelper(this);
+
+        //db = new DatabaseHelper(this);
+        db = new ContactDaoImpl(this);
         // Find id and set on listener
         findViewById(R.id.btn_add_contact).setOnClickListener(this);
-        // findViewById(R.id.btn_del_contact).setOnClickListener(this);
-
         listViewContact = (ListView) findViewById(R.id.list_view_contact);
         registerForContextMenu(listViewContact);
         popuplateContacts();
         registedClickCallBack();
-
-
+        createDirIfNotExists("HungImages");
 
     }
 
@@ -61,8 +78,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void popuplateContacts() {
         // fill data to listview control
-        ContactAdapter contactAdapter = new ContactAdapter(this, db.getAllContacts2());
-        // ListView listViewContact = (ListView) findViewById(R.id.list_view_contact);
+        List<Contact> listContact = db.getAllContact();
+        ArrayList<Contact> arrList = new ArrayList<Contact>(listContact.size());
+        arrList.addAll(listContact);
+        ContactAdapter contactAdapter = new ContactAdapter(this, arrList );
         listViewContact.setAdapter(contactAdapter);
 
     }
@@ -95,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (title){
             case "Delete":{
                 int id = item.getItemId();
-                if (db.delContact(id)) {
+                if (db.delete(id)) {
                     popuplateContacts();
                     MessageUtilities.alert(this, "Delete contact successfully!");
                 } else {
@@ -106,6 +125,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             case "Edit":{
                 result = true;
+                Intent intent = new Intent(this, ContactActivity.class);
+                int id = item.getItemId();
+                intent.putExtra("contact_id", id + "" );
+                startActivity(intent);
                 break;
             }
             case "Details":{
@@ -148,21 +171,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
-
-    private void delContact() {
-        boolean result = db.delContact(10);
-        if(result){
-            Toast.makeText(MainActivity.this, "Contact Deleted!", Toast.LENGTH_SHORT).show();
-        }else{
-            Toast.makeText(MainActivity.this, "Contact delete fail", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     private void addContact() {
         EditText edContactName = (EditText) findViewById(R.id.ed_contact_name);
         EditText edPhoneNumber = (EditText) findViewById(R.id.ed_phone_number);
         String contactName = edContactName.getText().toString();
         String phoneNumber = edPhoneNumber.getText().toString();
+        String image = "abc";
         boolean check = true;
         if (contactName.isEmpty()) {
             Toast.makeText(MainActivity.this, "Contact Name Empty", Toast.LENGTH_SHORT).show();
@@ -174,7 +188,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         if (check) {
             Log.d("Insert: ", "Inserting ..");
-            boolean result = db.addContact(new Contact(contactName, phoneNumber));
+            //boolean result = db.addContact(new Contact(contactName, phoneNumber));
+            Contact contact = new Contact();
+            contact.setName( contactName);
+            contact.setPhoneNumber( phoneNumber );
+            contact.setImage( "abc" );
+            boolean result = db.insert(contact);
             if( result ){
                 Toast.makeText(MainActivity.this, "Save contact successful!", Toast.LENGTH_SHORT).show();
             }
@@ -184,10 +203,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
+    /*
     private String[] getAllContacts2() {
         Log.d("Reading: ", "Reading all contacts..");
-        List<Contact> contacts = db.getAllContacts();
+        List<Contact> contacts = db.getAllContact();
         int size = contacts.size();
         String[] contactList = new String[size];
         int i = 0;
@@ -197,5 +216,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         Arrays.sort(contactList);
         return contactList;
+    }
+    */
+
+    public static boolean createDirIfNotExists(String path) {
+        boolean ret = true;
+        File file = new File(Environment.getExternalStorageDirectory(), path);
+        if (!file.exists()) {
+            if (!file.mkdirs()) {
+                Log.e("TravellerLog :: ", "Problem creating Image folder");
+                ret = false;
+            }
+        }
+        return ret;
     }
 }
